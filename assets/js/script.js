@@ -6,6 +6,10 @@ var taskIdCounter = 0;
 var pageContentEl = document.querySelector("#page-content");
 var tasks = [];
 
+var saveTasks = function() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
 var completeEditTask = function(taskName, taskType, taskId) {
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
     
@@ -17,6 +21,7 @@ var completeEditTask = function(taskName, taskType, taskId) {
             tasks[i].type = taskType;
         }
     }
+    saveTasks();
     alert("Task Updated!");
     formEl.removeAttribute("data-task-id");
     document.querySelector("#save-task").textContent = "Add Task";
@@ -78,9 +83,7 @@ var createTaskEl = function (taskDataObj) {
     tasks.push(taskDataObj);
 
     taskIdCounter++;
-
-    console.log(taskDataObj);
-    console.log(taskDataObj.status);
+    saveTasks();
 }
 
 var createTaskActions = function(taskId) {
@@ -143,6 +146,7 @@ var deleteTask = function (taskId) {
         }
     }
     tasks = updatedTaskArr;
+    saveTasks();
 }
 
 var taskStatusChangeHandler = function(event) {
@@ -165,7 +169,7 @@ var taskStatusChangeHandler = function(event) {
             tasks[i].status = statusValue;
         }
     }
-    console.log(tasks);
+    saveTasks();
 };
 
 //holds the code that creates a new task HTML element.
@@ -217,6 +221,7 @@ var dropTaskHandler = function (event) {
    }
    dropZoneEl.removeAttribute("style");
    dropZoneEl.appendChild(draggableElement);
+   saveTasks();
 };
 
 var dragLeaveHandler = function (event) {
