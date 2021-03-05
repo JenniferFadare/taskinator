@@ -10,7 +10,23 @@ var saveTasks = function() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-var completeEditTask = function(taskName, taskType, taskId) {
+var loadTasks = function() {
+
+    var savedTasks = localStorage.getItem("tasks");
+
+    if (!savedTasks) {
+        return false;
+    }
+
+    savedTasks = JSON.parse(savedTasks);
+
+    for (var i=0; i < savedTasks.length; i++){
+        createTaskEl(savedTasks[i]);
+    }
+}
+
+
+var completeEditTask = function (taskName, taskType, taskId) {
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
     
     taskSelected.querySelector("h3.task-name").textContent = taskName;
@@ -124,10 +140,8 @@ var createTaskActions = function(taskId) {
 };
 
 var editTask = function (taskId) {
-    console.log("editing task #" + taskId);
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
     var taskName = taskSelected.querySelector("h3.task-name").textContent;
-    console.log(taskName);
     var taskType = taskSelected.querySelector("span.task-type").textContent;
     document.querySelector("input[name='task-name']").value = taskName;
     document.querySelector("select[name='task-type']").value = taskType;
@@ -231,6 +245,8 @@ var dragLeaveHandler = function (event) {
     }
 }
 
+
+loadTasks();
 pageContentEl.addEventListener("click", taskButtonHandler);
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
 pageContentEl.addEventListener("dragstart", dragTaskHandler);
